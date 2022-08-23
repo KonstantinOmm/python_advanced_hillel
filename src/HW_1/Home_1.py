@@ -1,11 +1,8 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class Student:
-    first_name: str
-    last_name: str
-    marks: list[int]
+    def __init__(self, first_name, last_name, marks):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.marks = marks
 
     def average(self) -> float:
         return sum(self.marks)/len(self.marks)
