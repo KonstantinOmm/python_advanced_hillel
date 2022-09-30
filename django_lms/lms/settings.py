@@ -31,7 +31,6 @@ DEBUG = getenv('DJANGO_DEBUG').strip().lower() in ('true', '1', 'on')
 ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS', '').split()
 
 
-
 # Application definition
 
 INSTALLED_APPS = [

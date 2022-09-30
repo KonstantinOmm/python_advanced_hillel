@@ -18,6 +18,7 @@ class Student(models.Model):
         error_messages={'min_length': '"last_name" value less than two symbols'}
     )
     birthday = models.DateField(default=date.today, null=True, blank=True)
+
     # birthday = models.DateField(null=True, blank=True)
 
     def __str__(self):
