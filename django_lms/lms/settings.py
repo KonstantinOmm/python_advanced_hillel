@@ -10,22 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# load_dotenv(BASE_DIR / '.env')
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-deq(=08rc!bnk4#xw7xvkfxu7((n51_$747=9epha2#bag%$p-'
+SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+DEBUG = getenv('DJANGO_DEBUG').strip().lower() in ('true', '1', 'on')
+ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS', '').split()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_extensions'
+    'django_extensions',
+
+    'students.apps.StudentsConfig',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +129,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    SHELL_PLUS = 'ipython'      # bpython
+    SHELL_PLUS_PRINT_SQL = True
