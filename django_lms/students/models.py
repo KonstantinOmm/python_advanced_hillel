@@ -15,13 +15,13 @@ VALID_DOMAIN_LIST = ('@gmail.com', '@yahoo.com', '@test.com')
 class Student(models.Model):
     first_name = models.CharField(
         max_length=100,
-        verbose_name='first name',
+        # verbose_name='first name',
         # db_column='first_name_column',
         validators=[MinLengthValidator(2, '"first_name" value less than two symbols')]
     )
     last_name = models.CharField(
         max_length=100,
-        verbose_name='last name',
+        # verbose_name='last name',
         # db_column='last_name_column',
         validators=[MinLengthValidator(2)],
         error_messages={'min_length': '"last_name" value less than two symbols'}

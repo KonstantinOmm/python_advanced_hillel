@@ -5,13 +5,13 @@ from django.utils.deconstruct import deconstructible
 from students import models
 
 
-def valid_email_domains(value):
-    valid_domains = ['@gmail.com', '@yahoo.com']
-    for domain in valid_domains:
-        if domain in value:
-            break
-    else:
-        raise ValidationError(f'Email {value} is incorrect address.')
+# def valid_email_domains(value):
+#     valid_domains = ['@gmail.com', '@yahoo.com']
+#     for domain in valid_domains:
+#         if domain in value:
+#             break
+#     else:
+#         raise ValidationError(f'Email {value} is incorrect address.')
 
 
 @deconstructible
