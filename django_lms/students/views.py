@@ -14,4 +14,3 @@ def index(request):
     # HttpResponse
     response = HttpResponse(s)
     return response
-
