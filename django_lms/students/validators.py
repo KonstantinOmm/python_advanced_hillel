@@ -2,7 +2,7 @@
 # from django.core.exceptions import ValidationError
 # from django.utils.deconstruct import deconstructible
 
-from students import models
+# from students import models
 
 
 # def valid_email_domains(value):
