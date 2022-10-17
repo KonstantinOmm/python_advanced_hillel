@@ -18,4 +18,3 @@ urlpatterns = [
     path('update/<int:student_id>/', update_student, name='update'),   # Update
     path('delete/<int:student_id>/', delete_student, name='delete'),   # Delete
 ]
-

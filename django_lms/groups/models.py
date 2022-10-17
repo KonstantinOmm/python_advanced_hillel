@@ -6,7 +6,7 @@ from django.db import models
 
 from faker import Faker
 
-from groups.validators import validate_start_date
+from core.validators import validate_start_date
 
 
 class Group(models.Model):

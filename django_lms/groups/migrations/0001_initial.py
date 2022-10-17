@@ -3,7 +3,8 @@
 import datetime
 import django.core.validators
 from django.db import migrations, models
-import groups.validators
+# import groups.validators
+import core.validators
 
 
 class Migration(migrations.Migration):
@@ -19,7 +20,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('group_name', models.CharField(db_column='group_name', max_length=100, validators=[django.core.validators.MinLengthValidator(2, '"group_name" field less than two symbols')], verbose_name='group name')),
-                ('group_start_date', models.DateField(blank=True, default=datetime.date.today, null=True, validators=[groups.validators.validate_start_date])),
+                ('group_start_date', models.DateField(blank=True, default=datetime.date.today, null=True, validators=[core.validators.validate_start_date])),
                 ('group_description', models.TextField(max_length=1000)),
             ],
         ),

@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.middleware.csrf import get_token
-from django.shortcuts import render, get_object_or_404
+# from django.middleware.csrf import get_token
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 # from django.views.decorators.csrf import csrf_exempt
@@ -53,7 +53,7 @@ def create_student(request):
         form = CreateStudentForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('list'))
+            return HttpResponseRedirect(reverse('student:list'))
 
     return render(request, 'students/create.html', {'form': form})
 
@@ -67,7 +67,7 @@ def update_student(request, student_id):
         form = UpdateStudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('list'))
+            return HttpResponseRedirect(reverse('student:list'))
 
     return render(request, 'students/update.html', {'form': form})
 
@@ -77,6 +77,6 @@ def delete_student(request, student_id):
 
     if request.method == 'POST':
         student.delete()
-        return HttpResponseRedirect(reverse('list'))
+        return HttpResponseRedirect(reverse('student:list'))
 
     return render(request, 'students/delete.html', {'student': student})
