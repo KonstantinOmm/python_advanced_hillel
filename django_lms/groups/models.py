@@ -18,9 +18,12 @@ class Group(models.Model):
     )
     group_start_date = models.DateField(default=date.today, null=True, blank=True, validators=[validate_start_date])
     group_description = models.TextField(max_length=1000)
+    group_end_date = models.DateField(null=True, blank=True)
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    update_datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.group_name
+        return f"Group name: <{self.group_name}> "
 
     class Meta:
         db_table = 'groups'
