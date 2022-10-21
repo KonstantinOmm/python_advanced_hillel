@@ -27,13 +27,24 @@ class GroupBaseForm(forms.ModelForm):
 
 
 class CreateGroupForm(GroupBaseForm):
-    pass
+    from students.models import Student
+    students = forms.ModelMultipleChoiceField(queryset=Student.objects.select_related('group'), required=False)
 
 
 class UpdateGroupForm(GroupBaseForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['headman_field'] = forms.ChoiceField(
+            choices=[(student.pk, f'{student.first_name} {student.last_name}') for student in self.instance.students.all()],
+            label='Headman',
+            required=False,
+        )
+        self.fields['headman_field'].choices.insert(0, (0, '------'))
+
     class Meta(GroupBaseForm.Meta):
         exclude = [
             'group_start_date',
+            'headman',
         ]
 
 
