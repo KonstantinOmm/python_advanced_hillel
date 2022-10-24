@@ -9,7 +9,7 @@ from students.views import update_student
 
 # CRUD Create, Read, Update, Delete
 
-app_name = 'student'
+app_name = 'students'
 
 urlpatterns = [
     path('create/', create_student, name='create'),                    # Create

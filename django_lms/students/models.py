@@ -10,6 +10,7 @@ from faker import Faker
 
 # from students.validators import valid_email_domains
 from core.validators import ValidEmailDomain, validate_unique_email
+from groups.models import Group
 
 VALID_DOMAIN_LIST = ('@gmail.com', '@yahoo.com', '@test.com')
 
@@ -34,7 +35,9 @@ class Student(models.Model):
     # email = models.EmailField(validators=[valid_email_domains])
     # email = models.EmailField(validators=[ValidEmailDomain(*VALID_DOMAIN_LIST)])
     email = models.EmailField(validators=[ValidEmailDomain(*VALID_DOMAIN_LIST), validate_unique_email])
-
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, related_name='students')
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    update_datetime = models.DateTimeField(auto_now=True)
     phone_number = models.CharField(
         max_length=50,
         verbose_name='phone_number'
