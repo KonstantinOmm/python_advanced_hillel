@@ -30,12 +30,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for group in groups %}
+                {% for group in object_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td><a href="{% url 'groups:detail' group.pk %}">{{ group.group_name }}</a></td>
-                         <td>{% if group.heandman %}
-                                {{ group.heandman.first_name }}{{ group.heandman.last_name }}
+                         <td>{% if group.headman %}
+                                {{ group.headman.first_name }}{{ group.headman.last_name }}
                             {% endif %}
                         </td>
                         <td>{{ group.course_group }}</td>

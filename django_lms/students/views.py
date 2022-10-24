@@ -1,9 +1,10 @@
 # from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import UpdateView, DeleteView, DetailView, ListView
 
-
+from core.views import CustomUpdateBaseView
 from students.forms import CreateStudentForm, StudentFilterForm
 from students.forms import UpdateStudentForm
 from students.models import Student
@@ -19,30 +20,23 @@ from students.models import Student
 #     },
 #     location='query'
 # )
-def get_students(request):
-    students = Student.objects.select_related('group')
 
-    filter_form = StudentFilterForm(data=request.GET, queryset=students)
 
     # if len(args) and args.get('first_name') or args.get('last_name'):
     #     students = students.filter(
     #         Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
     #     )
 
-    return render(
-        request=request,
-        template_name='students/list.html',
-        context={
-            # 'title': 'List of students',
-            # 'students': students
-            'filter_form': filter_form
-        }
-    )
+
+class ListStudentView(ListView):
+    model = Student
+    template_name = 'students/list.html'
+    context_object_name = ''
 
 
-def detail_student(request, student_id):
-    student = Student.objects.get(pk=student_id)
-    return render(request, "students/detail.html", {'student': student})
+class DetailStudentView(DetailView):
+    model = Student
+    template_name = 'students/detail.html'
 
 
 # @csrf_exempt
@@ -58,25 +52,36 @@ def create_student(request):
     return render(request, 'students/create.html', {'form': form})
 
 
-def update_student(request, student_id):
-    student = get_object_or_404(Student, pk=student_id)
+# def update_student(request, student_id):
+#     student = get_object_or_404(Student, pk=student_id)
+#
+#     if request.method == 'GET':
+#         form = UpdateStudentForm(instance=student)
+#     elif request.method == 'POST':
+#         form = UpdateStudentForm(request.POST, instance=student)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect(reverse('students:list'))
+#
+#     return render(request, 'students/update.html', {'form': form})
 
-    if request.method == 'GET':
-        form = UpdateStudentForm(instance=student)
-    elif request.method == 'POST':
-        form = UpdateStudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('students:list'))
 
-    return render(request, 'students/update.html', {'form': form})
+# class CustomUpdateStudentView(CustomUpdateBaseView):
+#     model = Student
+#     form_class = UpdateStudentForm
+#     success_url = 'students:list'
+#     template_name = 'students/update.html'
 
 
-def delete_student(request, student_id):
-    student = get_object_or_404(Student, pk=student_id)
+class UpdateStudentView(UpdateView):
+    model = Student
+    form_class = UpdateStudentForm
+    success_url = reverse_lazy('students:list')
+    template_name = 'students/update.html'
 
-    if request.method == 'POST':
-        student.delete()
-        return HttpResponseRedirect(reverse('students:list'))
 
-    return render(request, 'students/delete.html', {'student': student})
+class DeleteStudentView(DeleteView):
+    model = Student
+    template_name = 'students/delete.html'
+    success_url = reverse_lazy('students:list')
+

@@ -1,41 +1,31 @@
-from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
-# from django.middleware.csrf import get_token
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt    # noqa
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+# from django.views.generic import UpdateView, ListView
+from django.views.generic import UpdateView, ListView, DeleteView, DetailView
 
-from webargs.djangoparser import use_args
-
-from groups.forms import UpdateGroupForm, CreateGroupForm
-
-from webargs.fields import Str
-
-from groups.models import Group
+from students.models import Student
+# from .forms import CreateGroupForm, GroupFilterForm, UpdateGroupForm
+from .forms import CreateGroupForm, UpdateGroupForm
+from .models import Group
 
 
-@use_args(
-    {
-        'group_name': Str(required=False),
-    },
-    location='query'
-)
-def get_groups(request, args):
-    groups = Group.objects.all()
-
-    if len(args) and args.get('group_name'):
-        groups = groups.filter(
-            Q(group_name=args.get('group_name'))
-        )
-
-    return render(
-        request=request,
-        template_name='groups/list.html',
-        context={
-            'title': 'List of groups',
-            'groups': groups,
-        }
-    )
+# def get_groups(request):
+#     groups = Group.objects.all()
+#
+#     filter_form = GroupFilterForm(data=request.GET, queryset=groups)
+#
+#     return render(
+#         request=request,
+#         template_name='groups/list.html',
+#         context={
+#             'filter_form': filter_form,
+#         }
+#     )
+class ListGroupView(ListView):
+    model = Group
+    template_name = 'groups/list.html'
 
 
 def create_group(request):
@@ -46,34 +36,93 @@ def create_group(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('groups:list'))
-
     return render(request, 'groups/create.html', {'form': form})
 
 
 def detail_group(request, group_id):
     group = Group.objects.get(pk=group_id)
     return render(request, 'groups/detail.html', {'group': group})
+# def detail_group(request, group_id):
+#     group = Group.objects.get(pk=group_id)
+#     return render(request, 'groups/detail.html', {'group': group})
 
 
-def update_group(request, group_id):
-    group = get_object_or_404(Group, pk=group_id)
+class DetailGroupView(DetailView):
+    model = Group
+    template_name = 'groups/detail.html'
 
-    if request.method == 'GET':
-        form = UpdateGroupForm(instance=group)
-    elif request.method == 'POST':
-        form = UpdateGroupForm(request.POST, instance=group)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('groups:list'))
 
-    return render(request, 'groups/update.html', {'form': form, 'group': group})
+# def update_group(request, group_id):
+#     group = get_object_or_404(Group, pk=group_id)
+#
+#     form = UpdateGroupForm(instance=group)
+#
+#     if request.method == 'GET':
+#         form = UpdateGroupForm(instance=group)
+#     elif request.method == 'POST':
+#         form = UpdateGroupForm(request.POST, instance=group)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect(reverse('groups:list'))
+#
+#     return render(
+#         request,
+#         'groups/update.html',
+#         {
+#             'form': form,
+#             # 'group': group,
+#             'students': group.students.prefetch_related('headman_group')
+#         }
+#     )
+class UpdateGroupView(UpdateView):
+    model = Group
+    form_class = UpdateGroupForm
+    success_url = reverse_lazy('groups:list')
+    template_name = 'groups/update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['students'] = self.get_object().students.prefetch_related('headman_group')
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        try:
+            initial['headman_field'] = self.object.headman.pk
+        except AttributeError:
+            initial['headman_field'] = 0
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        pk = int(form.cleaned_data['headman_field'])
+        if pk:
+            form.instance.headman = Student.objects.get(pk=pk)
+        else:
+            form.instance.headman = None
+        form.save()
+        return response
 
 
 def delete_group(request, group_id):
     group = get_object_or_404(Group, pk=group_id)
+# def delete_group(request, group_id):
+#     group = get_object_or_404(Group, pk=group_id)
+#
+#     if request.method == 'POST':
+#         group.delete()
+#         return HttpResponseRedirect(reverse('groups:list'))
+#
+#     return render(request, 'groups/delete.html', {'group': group})
 
     if request.method == 'POST':
         group.delete()
         return HttpResponseRedirect(reverse('groups:list'))
 
     return render(request, 'groups/delete.html', {'group': group})
+
+
+class DeleteGroupView(DeleteView):
+    model = Group
+    template_name = 'groups/delete.html'
+    success_url = reverse_lazy('groups:list')
