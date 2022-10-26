@@ -1,14 +1,13 @@
 from django.urls import path
 
-from .views import (create_teacher, delete_teacher, detail_teacher,
-                    get_teachers, update_teacher)
+from teachers.views import ListTeacherView, CreateTeacherView, DetailTeacherView, UpdateTeacherView, DeleteTeacherView
 
 app_name = 'teachers'
 
 urlpatterns = [
-    path('', get_teachers, name='list'),
-    path('create/', create_teacher, name='create'),
-    path('detail/<int:teacher_id>/', detail_teacher, name='detail'),
-    path('update/<int:teacher_id>/', update_teacher, name='update'),
-    path('delete/<int:teacher_id>/', delete_teacher, name='delete'),
+    path('', ListTeacherView.as_view(), name='list'),
+    path('create/', CreateTeacherView.as_view(), name='create'),
+    path('detail/<int:pk>/', DetailTeacherView.as_view(), name='detail'),
+    path('update/<int:pk>/', UpdateTeacherView.as_view(), name='update'),
+    path('delete/<int:pk>/', DeleteTeacherView.as_view(), name='delete'),
 ]

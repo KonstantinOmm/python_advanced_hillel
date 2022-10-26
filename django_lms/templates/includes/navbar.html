@@ -20,8 +20,12 @@
             Student
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'students:create' %}">Create student</a></li>
-            <li><a class="dropdown-item" href="{% url 'students:list' %}">List</a></li>
+              {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'students:create' %}">Create</a></li>
+                <li><a class="dropdown-item" href="{% url 'students:list' %}">List</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'students:list' %}">List</a></li>
+              {% endif %}
           </ul>
         </li>
 
@@ -30,8 +34,12 @@
             Groups
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'groups:create' %}">Create</a></li>
-            <li><a class="dropdown-item" href="{% url 'groups:list' %}">List</a></li>
+              {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'groups:create' %}">Create</a></li>
+                <li><a class="dropdown-item" href="{% url 'groups:list' %}">List</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'groups:list' %}">List</a></li>
+              {% endif %}
           </ul>
         </li>
 
@@ -40,8 +48,12 @@
             Teachers
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'teachers:create' %}">Create</a></li>
-            <li><a class="dropdown-item" href="{% url 'teachers:list' %}">List</a></li>
+              {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'teachers:create' %}">Create</a></li>
+                <li><a class="dropdown-item" href="{% url 'teachers:list' %}">List</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'teachers:list' %}">List</a></li>
+              {% endif %}
           </ul>
         </li>
 
@@ -51,8 +63,12 @@
             Courses
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'courses:create' %}">Create</a></li>
-            <li><a class="dropdown-item" href="{% url 'courses:list' %}">List</a></li>
+              {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'courses:create' %}">Create</a></li>
+                <li><a class="dropdown-item" href="{% url 'courses:list' %}">List</a></li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'courses:list' %}">List</a></li>
+              {% endif %}
           </ul>
         </li>
 
@@ -61,6 +77,25 @@
 {#        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
 {#        <button class="btn btn-outline-primary" type="submit">Search</button>#}
 {#      </form>#}
+        <div class="d-flex">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+               <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu">
+                        {%  if user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{% url 'accounts:login' %}">Login</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:register' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
   </div>
 </nav>
