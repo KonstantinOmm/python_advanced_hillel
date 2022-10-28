@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from os import getenv
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -52,6 +53,8 @@ INSTALLED_APPS = [
     'courses.apps.CoursesConfig',
     'core.apps.CoreConfig',
     'accounts.apps.AccountsConfig',
+
+    'rangefilter',
 ]
 
 MIDDLEWARE = [
@@ -156,4 +159,6 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-EMAIL_PORT = 1333
+EMAIL_PORT = 1025
+
+LOGIN_REDIRECT_URL = reverse_lazy('home')
