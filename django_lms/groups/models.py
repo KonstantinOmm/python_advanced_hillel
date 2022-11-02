@@ -34,7 +34,7 @@ class Group(BaseModel):
         to=Teacher,
         null=True,
         blank=True,
-        related_name='groups'
+        related_name='groups',
     )
 
     class Meta:
