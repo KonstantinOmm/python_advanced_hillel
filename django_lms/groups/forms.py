@@ -1,20 +1,13 @@
 from django import forms
 from django_filters import FilterSet
 
+from students.models import Student
 from .models import Group
 
 
 class GroupBaseForm(forms.ModelForm):
     from students.models import Student
     students = forms.ModelMultipleChoiceField(queryset=Student.objects.select_related('group'), required=False)
-    # students = forms.ModelMultipleChoiceField(queryset=Student.objects.filter(group__isnull=True), required=False)
-
-    def save(self, commit=True):
-        group = super().save(commit)
-        students = self.cleaned_data['students']
-        for student in students:
-            student.group = group
-            student.save()
 
     class Meta:
         model = Group
@@ -27,8 +20,17 @@ class GroupBaseForm(forms.ModelForm):
 
 
 class CreateGroupForm(GroupBaseForm):
-    from students.models import Student
-    students = forms.ModelMultipleChoiceField(queryset=Student.objects.select_related('group'), required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['students'] = forms.ModelMultipleChoiceField(
+            queryset=Student.objects.select_related('group'),
+            required=False
+        )
+
+    class Meta(GroupBaseForm.Meta):
+        exclude = [
+            'headman'
+        ]
 
 
 class UpdateGroupForm(GroupBaseForm):
