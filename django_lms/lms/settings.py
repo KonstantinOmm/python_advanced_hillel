@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
 
     'rangefilter',
+
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'core.middlewares.SimpleMiddleware',
 ]
 
 ROOT_URLCONF = 'lms.urls'
@@ -81,6 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.filter_params',
             ],
         },
     },
